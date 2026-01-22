@@ -6,7 +6,10 @@ A comprehensive Laravel application for managing Indonesian administrative regio
 
 - **Hierarchical Data Structure**: Provinces → Regencies/Cities → Districts → Villages + Islands
 - **RESTful API**: Full CRUD operations with filtering and relationship loading
-- **Modern Web Interface**: Responsive design with Tailwind CSS
+- **Modern Web Interface**: W3.CSS-based UI with cascading dropdown navigation inspired by [wilayah.cahyadsn.com](https://wilayah.cahyadsn.com/)
+- **Theme Switcher**: 12 beautiful color themes (black, brown, pink, orange, amber, lime, green, teal, purple, indigo, blue, cyan)
+- **Dynamic AJAX Loading**: Cascading province → regency → district → village selection
+- **Statistics Dashboard**: Real-time counts and information display
 - **Comprehensive Testing**: Pest test suites for API and web features
 - **Database Seeding**: Sample data from major Indonesian provinces
 - **Geographic Data**: Latitude, longitude, elevation, area, and population statistics
@@ -194,12 +197,42 @@ DELETE /api/v1/islands/{code}         - Delete island
 
 ## Web Routes
 
-- `/` - Home page (province listing)
+- `/` - Home page with cascading dropdown navigation
 - `/wilayah/provinces/{code}` - Province detail page
 - `/wilayah/regencies/{code}` - Regency detail page
 - `/wilayah/districts/{code}` - District detail page
 - `/wilayah/villages/{code}` - Village detail page
 - `/wilayah/islands` - Islands listing page
+- `/theme/{theme}` - Theme switcher endpoint (POST)
+
+## UI Features
+
+### Homepage
+- **Cascading Dropdown Selection**: Progressive disclosure navigation from Province → Regency → District → Village
+- **Statistics Cards**: Real-time display of total provinces, regencies, districts, and villages
+- **Information Panel**: Dynamic display of selected region details including:
+  - Code, name, and capital (ibukota)
+  - Geographic coordinates (latitude, longitude)
+  - Area and population statistics
+  - Postal code (for villages)
+- **AJAX Loading**: Smooth, asynchronous data loading without page refresh
+- **Loading Indicator**: Visual feedback during data fetching
+
+### Theme Switcher
+12 beautiful color themes available via dropdown menu:
+- Black, Brown, Pink, Orange
+- Amber, Lime, Green, Teal
+- Purple, Indigo, Blue, Cyan
+
+Theme preference is saved to session and persists across page loads.
+
+### Islands Page
+- Card-based grid layout displaying all islands
+- Visual tags for:
+  - Outermost islands (Pulau Terluar)
+  - Populated/Unpopulated status
+- Regency information and geographic coordinates
+- Responsive grid that adapts to screen size
 
 ## Running Tests
 
@@ -246,7 +279,8 @@ To add more data, you can:
 
 - **Framework**: Laravel 12
 - **Testing**: Pest
-- **Frontend**: Blade Templates + Tailwind CSS
+- **Frontend**: Blade Templates + W3.CSS Framework
+- **JavaScript**: Vanilla JS for AJAX interactions
 - **Database**: MySQL/PostgreSQL/SQLite
 - **API**: RESTful JSON API
 
