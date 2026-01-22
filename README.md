@@ -1,60 +1,261 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Wilayah Indonesia - Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive Laravel application for managing Indonesian administrative region data (wilayah Indonesia) with a hierarchical structure, RESTful API, and modern web interface.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Hierarchical Data Structure**: Provinces → Regencies/Cities → Districts → Villages + Islands
+- **RESTful API**: Full CRUD operations with filtering and relationship loading
+- **Modern Web Interface**: Responsive design with Tailwind CSS
+- **Comprehensive Testing**: Pest test suites for API and web features
+- **Database Seeding**: Sample data from major Indonesian provinces
+- **Geographic Data**: Latitude, longitude, elevation, area, and population statistics
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## System Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2+
+- Composer
+- Laravel 12
+- MySQL/PostgreSQL/SQLite
 
-## Learning Laravel
+## Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd wilayah-indonesia
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. Install dependencies:
+```bash
+composer install
+```
 
-## Laravel Sponsors
+3. Configure environment:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4. Configure your database in `.env`:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=wilayah_indonesia
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-### Premium Partners
+5. Run migrations and seeders:
+```bash
+php artisan migrate --seed
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+6. Start the development server:
+```bash
+php artisan serve
+```
 
-## Contributing
+Visit `http://localhost:8000` to see the application.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Database Structure
 
-## Code of Conduct
+### Tables
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### provinces
+- **code** (char 2): Primary key - Province code
+- **name** (string): Province name
+- **latitude/longitude** (decimal): Geographic coordinates
+- **elevation** (decimal): Elevation in meters
+- **timezone** (string): Time zone (WIB/WITA/WIT)
+- **area** (decimal): Area in km²
+- **population** (bigint): Population count
+- **boundaries** (text): Administrative boundaries
 
-## Security Vulnerabilities
+#### regencies
+- **code** (char 4): Primary key - Regency/City code
+- **province_code** (char 2): Foreign key to provinces
+- **name** (string): Regency/City name
+- **type** (enum): 'kabupaten' or 'kota'
+- Geographic and population data similar to provinces
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+#### districts
+- **code** (char 6): Primary key - District code
+- **regency_code** (char 4): Foreign key to regencies
+- **name** (string): District name (kecamatan)
+- Geographic and population data
+
+#### villages
+- **code** (char 10): Primary key - Village code
+- **district_code** (char 6): Foreign key to districts
+- **name** (string): Village name
+- **type** (enum): 'desa' or 'kelurahan'
+- **postal_code** (string): Postal code
+- Geographic and population data
+
+#### islands
+- **code** (char 9): Primary key - Island code
+- **regency_code** (char 4): Foreign key to regencies (nullable)
+- **name** (string): Island name
+- **is_outermost** (enum): 'ya' or 'tidak'
+- **is_populated** (enum): 'ya' or 'tidak'
+- Geographic data
+
+## API Endpoints
+
+All API endpoints are prefixed with `/api/v1/`.
+
+### Provinces
+
+```
+GET    /api/v1/provinces              - List all provinces
+POST   /api/v1/provinces              - Create new province
+GET    /api/v1/provinces/{code}       - Show province details
+PUT    /api/v1/provinces/{code}       - Update province
+DELETE /api/v1/provinces/{code}       - Delete province
+```
+
+**Query Parameters:**
+- `with_regencies` - Include regencies relationship
+- `search` - Search by name
+
+**Example:**
+```bash
+curl http://localhost:8000/api/v1/provinces?with_regencies=1
+```
+
+### Regencies
+
+```
+GET    /api/v1/regencies              - List all regencies
+POST   /api/v1/regencies              - Create new regency
+GET    /api/v1/regencies/{code}       - Show regency details
+PUT    /api/v1/regencies/{code}       - Update regency
+DELETE /api/v1/regencies/{code}       - Delete regency
+```
+
+**Query Parameters:**
+- `province_code` - Filter by province
+- `type` - Filter by type (kabupaten/kota)
+- `with_province` - Include province relationship
+- `with_districts` - Include districts relationship
+- `with_islands` - Include islands relationship
+- `search` - Search by name
+
+### Districts
+
+```
+GET    /api/v1/districts              - List all districts
+POST   /api/v1/districts              - Create new district
+GET    /api/v1/districts/{code}       - Show district details
+PUT    /api/v1/districts/{code}       - Update district
+DELETE /api/v1/districts/{code}       - Delete district
+```
+
+**Query Parameters:**
+- `regency_code` - Filter by regency
+- `with_regency` - Include regency relationship
+- `with_villages` - Include villages relationship
+- `search` - Search by name
+
+### Villages
+
+```
+GET    /api/v1/villages               - List all villages
+POST   /api/v1/villages               - Create new village
+GET    /api/v1/villages/{code}        - Show village details
+PUT    /api/v1/villages/{code}        - Update village
+DELETE /api/v1/villages/{code}        - Delete village
+```
+
+**Query Parameters:**
+- `district_code` - Filter by district
+- `type` - Filter by type (desa/kelurahan)
+- `with_district` - Include district relationship
+- `search` - Search by name
+
+### Islands
+
+```
+GET    /api/v1/islands                - List all islands
+POST   /api/v1/islands                - Create new island
+GET    /api/v1/islands/{code}         - Show island details
+PUT    /api/v1/islands/{code}         - Update island
+DELETE /api/v1/islands/{code}         - Delete island
+```
+
+**Query Parameters:**
+- `regency_code` - Filter by regency
+- `is_outermost` - Filter by outermost status
+- `is_populated` - Filter by populated status
+- `with_regency` - Include regency relationship
+- `search` - Search by name
+
+## Web Routes
+
+- `/` - Home page (province listing)
+- `/wilayah/provinces/{code}` - Province detail page
+- `/wilayah/regencies/{code}` - Regency detail page
+- `/wilayah/districts/{code}` - District detail page
+- `/wilayah/villages/{code}` - Village detail page
+- `/wilayah/islands` - Islands listing page
+
+## Running Tests
+
+Run all tests:
+```bash
+php artisan test
+```
+
+Run specific test suite:
+```bash
+php artisan test --filter ProvinceApiTest
+php artisan test --filter RegencyApiTest
+php artisan test --filter WilayahWebTest
+```
+
+## Sample Data
+
+The seeder includes sample data for:
+- 7 provinces (Aceh, North Sumatra, Jakarta, West Java, Central Java, East Java, Bali)
+- 6 regencies/cities
+- 5 districts
+- 5 villages
+- 4 islands
+
+## Development
+
+### Adding More Data
+
+To add more data, you can:
+
+1. **Via API**: Use POST endpoints to create new records
+2. **Via Seeder**: Modify `database/seeders/WilayahSeeder.php`
+3. **Via SQL**: Import SQL files directly to the database
+
+### Customization
+
+- **Models**: Located in `app/Models/`
+- **Controllers**: API controllers in `app/Http/Controllers/Api/`, web controller in `app/Http/Controllers/WilayahController.php`
+- **Resources**: JSON resources in `app/Http/Resources/`
+- **Views**: Blade templates in `resources/views/wilayah/`
+- **Routes**: API routes in `routes/api.php`, web routes in `routes/web.php`
+
+## Technology Stack
+
+- **Framework**: Laravel 12
+- **Testing**: Pest
+- **Frontend**: Blade Templates + Tailwind CSS
+- **Database**: MySQL/PostgreSQL/SQLite
+- **API**: RESTful JSON API
+
+## Credits
+
+Data structure based on [cahyadsn/wilayah](https://github.com/cahyadsn/wilayah) repository following Kepmendagri No 300.2.2-2138 Tahun 2025.
+
+Built with Laravel following modern best practices and clean architecture principles.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# laravel-wilayah-indonesia
+MIT License
