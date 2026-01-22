@@ -23,6 +23,7 @@ class IslandResource extends JsonResource
             'area' => $this->area,
             'is_outermost' => $this->is_outermost,
             'is_populated' => $this->is_populated,
+            'notes' => $this->notes,
             'regency' => new RegencyResource($this->whenLoaded('regency')),
         ];
     }

@@ -16,6 +16,7 @@ class Regency extends Model
         'code',
         'province_code',
         'name',
+        'ibukota',
         'type',
         'latitude',
         'longitude',
@@ -24,6 +25,7 @@ class Regency extends Model
         'area',
         'population',
         'boundaries',
+        'status',
     ];
 
     protected $casts = [
@@ -32,6 +34,7 @@ class Regency extends Model
         'elevation' => 'decimal:2',
         'area' => 'decimal:2',
         'population' => 'integer',
+        'status' => 'integer',
     ];
 
     public function province(): BelongsTo

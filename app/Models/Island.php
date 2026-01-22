@@ -20,6 +20,7 @@ class Island extends Model
         'area',
         'is_outermost',
         'is_populated',
+        'notes',
     ];
 
     protected $casts = [

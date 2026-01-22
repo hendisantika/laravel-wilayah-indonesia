@@ -14,6 +14,7 @@ class Province extends Model
     protected $fillable = [
         'code',
         'name',
+        'ibukota',
         'latitude',
         'longitude',
         'elevation',
@@ -21,6 +22,7 @@ class Province extends Model
         'area',
         'population',
         'boundaries',
+        'status',
     ];
 
     protected $casts = [
@@ -29,6 +31,7 @@ class Province extends Model
         'elevation' => 'decimal:2',
         'area' => 'decimal:2',
         'population' => 'integer',
+        'status' => 'integer',
     ];
 
     public function regencies(): HasMany

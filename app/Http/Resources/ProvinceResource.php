@@ -17,6 +17,7 @@ class ProvinceResource extends JsonResource
         return [
             'code' => $this->code,
             'name' => $this->name,
+            'ibukota' => $this->ibukota,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'elevation' => $this->elevation,
@@ -24,6 +25,7 @@ class ProvinceResource extends JsonResource
             'area' => $this->area,
             'population' => $this->population,
             'boundaries' => $this->boundaries,
+            'status' => $this->status,
             'regencies_count' => $this->whenCounted('regencies'),
             'regencies' => RegencyResource::collection($this->whenLoaded('regencies')),
         ];
