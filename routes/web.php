@@ -12,3 +12,8 @@ Route::prefix('wilayah')->name('wilayah.')->group(function () {
     Route::get('/villages/{code}', [WilayahController::class, 'village'])->name('village');
     Route::get('/islands', [WilayahController::class, 'islands'])->name('islands');
 });
+
+Route::post('/theme/{theme}', function ($theme) {
+    session(['theme' => $theme]);
+    return response()->json(['success' => true]);
+});

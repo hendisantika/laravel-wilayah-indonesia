@@ -1,55 +1,72 @@
-@extends('layouts.app')
+@extends('layouts.wilayah')
 
 @section('title', 'Daftar Pulau - Wilayah Indonesia')
 
 @section('content')
-<div class="mb-8">
-    <h1 class="text-4xl font-bold text-gray-800 mb-2">Pulau-Pulau di Indonesia</h1>
-    <p class="text-gray-600">Daftar pulau di Indonesia</p>
+<div class="w3-card-4">
+    <div class="w3-panel w3-bar w3-theme-d1">
+        <h3 class="w3-theme-d1">Pulau-Pulau di Indonesia</h3>
+        <h4 class="w3-theme-d1">Daftar Pulau di Wilayah Indonesia</h4>
+    </div>
+
+    <div class="w3-container w3-padding">
+        <div class="w3-row-padding">
+            @forelse($islands as $island)
+                <div class="w3-col m4 l3 w3-padding">
+                    <div class="w3-card-4 w3-hover-shadow">
+                        <header class="w3-container w3-theme-d3">
+                            <h4>{{ $island->name }}</h4>
+                        </header>
+
+                        <div class="w3-container">
+                            @if($island->regency)
+                                <p><strong>Kabupaten/Kota:</strong> {{ $island->regency->name }}</p>
+                            @endif
+
+                            <p><strong>Kode:</strong> {{ $island->code }}</p>
+
+                            @if($island->area)
+                                <p><strong>Luas:</strong> {{ number_format($island->area, 2) }} km²</p>
+                            @endif
+
+                            <div class="w3-row w3-margin-top">
+                                @if($island->is_outermost === 'ya')
+                                    <span class="w3-tag w3-red w3-tiny">Pulau Terluar</span>
+                                @endif
+
+                                @if($island->is_populated === 'ya')
+                                    <span class="w3-tag w3-green w3-tiny">Berpenghuni</span>
+                                @else
+                                    <span class="w3-tag w3-gray w3-tiny">Tidak Berpenghuni</span>
+                                @endif
+                            </div>
+
+                            @if($island->latitude && $island->longitude)
+                                <p class="w3-tiny w3-text-gray w3-margin-top">
+                                    📍 {{ $island->latitude }}, {{ $island->longitude }}
+                                </p>
+                            @endif
+
+                            @if($island->notes)
+                                <p class="w3-tiny w3-text-gray">
+                                    <em>{{ $island->notes }}</em>
+                                </p>
+                            @endif
+                        </div>
+
+                        <div style="height: 10px;"></div>
+                    </div>
+                </div>
+            @empty
+                <div class="w3-col m12 w3-padding">
+                    <div class="w3-panel w3-pale-yellow w3-border w3-border-yellow">
+                        <p>Tidak ada data pulau. Silakan jalankan seeder terlebih dahulu.</p>
+                    </div>
+                </div>
+            @endforelse
+        </div>
+    </div>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    @forelse($islands as $island)
-        <div class="bg-white rounded-lg shadow hover:shadow-lg transition p-6">
-            <div class="flex justify-between items-start mb-2">
-                <h2 class="text-xl font-semibold text-gray-800">{{ $island->name }}</h2>
-                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                    {{ $island->code }}
-                </span>
-            </div>
-
-            @if($island->regency)
-                <p class="text-sm text-gray-600 mb-2">{{ $island->regency->name }}</p>
-            @endif
-
-            <div class="flex gap-2 mt-3">
-                @if($island->is_outermost === 'ya')
-                    <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">Pulau Terluar</span>
-                @endif
-
-                @if($island->is_populated === 'ya')
-                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Berpenghuni</span>
-                @else
-                    <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">Tidak Berpenghuni</span>
-                @endif
-            </div>
-
-            @if($island->area)
-                <p class="text-sm text-gray-600 mt-3">
-                    Luas: {{ number_format($island->area, 2) }} km²
-                </p>
-            @endif
-
-            @if($island->latitude && $island->longitude)
-                <p class="text-xs text-gray-500 mt-2">
-                    {{ $island->latitude }}, {{ $island->longitude }}
-                </p>
-            @endif
-        </div>
-    @empty
-        <div class="col-span-full bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
-            Tidak ada data pulau. Silakan jalankan seeder terlebih dahulu.
-        </div>
-    @endforelse
-</div>
+<div style="height: 100px;"></div>
 @endsection

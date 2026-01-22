@@ -13,8 +13,14 @@ class WilayahController extends Controller
 {
     public function index()
     {
-        $provinces = Province::withCount('regencies')->get();
-        return view('wilayah.index', compact('provinces'));
+        $provinces = Province::orderBy('name')->get();
+        $stats = [
+            'provinces' => Province::count(),
+            'regencies' => Regency::count(),
+            'districts' => District::count(),
+            'villages' => Village::count(),
+        ];
+        return view('wilayah.home', compact('provinces', 'stats'));
     }
 
     public function province($code)
