@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ProvinceSeeder::class,
             RegencySeeder::class,
+            DistrictSeeder::class,
+            VillageSeeder::class,
         ]);
 
         User::factory()->create([
