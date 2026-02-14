@@ -30,6 +30,28 @@ Successfully integrated complete administrative data for Indonesia from the [ind
   - Population
   - Geographic boundaries (GeoJSON format)
 
+### ✅ Districts (Level 3)
+- **Total**: 4,216 districts
+- **Data includes**:
+  - District code (6 digits)
+  - Regency code (foreign key)
+  - District name
+  - Geographic coordinates (latitude, longitude)
+  - Area (km²)
+  - Population
+
+### ✅ Villages (Level 4)
+- **Total**: 73,776 villages
+- **Data includes**:
+  - Village code (10 digits)
+  - District code (foreign key)
+  - Village name
+  - Type (desa or kelurahan)
+  - Geographic coordinates (latitude, longitude)
+  - Area (km²)
+  - Population
+  - Postal code
+
 ## Regional Breakdown
 
 | Region | Provinces | Regencies | Source File |
@@ -80,8 +102,12 @@ Successfully integrated complete administrative data for Indonesia from the [ind
 ### Seeders
 - `database/seeders/ProvinceSeeder.php` - Seeds provinces from JSON data
 - `database/seeders/RegencySeeder.php` - Seeds regencies from JSON data
-- `database/seeders/data/provinces.json` - Province data (38 records)
-- `database/seeders/data/regencies.json` - Regency data (495 records)
+- `database/seeders/DistrictSeeder.php` - Seeds districts from JSON data
+- `database/seeders/VillageSeeder.php` - Seeds villages from JSON data
+- `database/seeders/data/provinces.json` - Province data (38 records, 1.1 MB)
+- `database/seeders/data/regencies.json` - Regency data (495 records, 11 MB)
+- `database/seeders/data/districts.json` - District data (4,603 records, 910 KB)
+- `database/seeders/data/villages.json` - Village data (81,726 records, 20 MB)
 
 ### Migrations
 - `2026_02_14_223135_update_boundaries_column_type.php` - Updates boundaries column to longText to accommodate large GeoJSON data
@@ -127,13 +153,15 @@ $regency = DB::table('regencies')->find('1101');
 $province = DB::table('provinces')->find($regency->province_code);
 ```
 
-## Notes on Districts and Villages
+## Total Coverage
 
-The source repository also contains data for:
-- **Districts (Level 3)**: ~7,069 records in V9.x migration files
-- **Villages (Level 4)**: ~81,911 records in V10.x migration files
+**🎉 78,525 Administrative Units Integrated**
+- 38 Provinces
+- 495 Regencies/Cities
+- 4,216 Districts
+- 73,776 Villages
 
-These are stored in a different format with PostGIS spatial data and were not integrated in this initial phase. They can be added later if needed.
+This represents complete hierarchical administrative data for Indonesia from province level down to village level.
 
 ## Data Source
 
@@ -183,5 +211,5 @@ If you need district and village data:
 ---
 
 **Integration Date**: 2026-02-14
-**Status**: ✅ Complete (Provinces & Regencies)
-**Total Records**: 533 (38 provinces + 495 regencies)
+**Status**: ✅ Complete (All 4 Levels)
+**Total Records**: 78,525 administrative units
