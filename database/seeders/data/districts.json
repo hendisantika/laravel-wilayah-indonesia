@@ -41425,5 +41425,14 @@
         "longitude": null,
         "area": null,
         "population": null
+    },
+    {
+        "code": "320444",
+        "regency_code": "3204",
+        "name": "Cangkuang",
+        "latitude": -7.0236,
+        "longitude": 107.642,
+        "area": null,
+        "population": null
     }
 ]
